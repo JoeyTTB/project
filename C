@@ -1,1 +1,86 @@
-qwer
+1.查找水仙花数：
+int main()
+{
+    int n = 0;
+    scanf("%d", &n);//限制查找区间的最大值
+    shuixian(n);
+    return 0;
+}
+#include"tools.h"
+int position(int i)                      //计算参数的位数
+{
+    int count = 0;
+    while (1)
+    {
+        if (i / 10 != 0)
+        {
+            count++;
+            i = i / 10;
+        }
+        else
+        {
+            count++;
+            break;
+        }
+    }
+    return count;
+}
+double Multi(int n, int k)                //平方
+{
+    if (k < 0)
+    {
+        return 1 / Multi(n, -k);          //注意出现小数要使用浮点型
+    }                                     //处理k<0,先计算n^k再被1除
+    else if (k == 0)
+    {
+        return 1;
+    }
+    else
+        return Multi(n, k - 1) * n;      //最佳限制递归方案
+}
+double sqr(int i, int pst)               //计算n次方之和
+{
+    int ret = 0;
+    int j = 0;
+    for (int count = 1; count <= pst; count++)                                     //153= 1^3 + 5^3 + 3^3
+    {
+        ret = Multi(i % 10, pst);
+        ret = ret + j;
+        j = ret;
+        i = i / 10;
+    }
+    return ret;
+}
+
+void shuixian(int n)                     //水仙花数主程序
+{
+    int i = 0;
+    for (i = 11; i <= n; i++)
+    {
+        int pst = position(i);
+        double ret = sqr(i, pst);
+        if (i == ret)
+        {
+            printf("%d\n", i);
+        }
+    }
+}
+#pragma once
+#define _CRT_SECURE_NO_WARNINGS 1
+#include<stdio.h>
+#include<string.h>
+#include<math.h>
+int position(int n);
+double Multi(int n, int k);
+double sqr(int i, int pst);
+void shuixian(int n);
+
+
+
+
+
+
+
+
+
+
