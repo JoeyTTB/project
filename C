@@ -74,7 +74,34 @@ int position(int n);
 double Multi(int n, int k);
 double sqr(int i, int pst);
 void shuixian(int n);
-
+--------------------------------------------------------------------------------
+2.Σn!:
+int main()
+{
+    int a = 0;
+    scanf("%d", &a);
+    int sum = jiecheng(a);
+    printf("sum=%d\n", sum);
+    return 0;
+}
+#include"head.h"
+int jiecheng(int a)
+{
+	int i = 1;
+	int ret = 1;
+	int sum = 0;
+	int j = 1;
+	for (i = 1; i <= a; i++)
+	{
+		for (j = 1, ret = 1; j <= i; j++)
+		{
+			ret *= j;
+		}
+		sum += ret;
+	}
+	return sum;
+}
+--------------------------------------------------------------------------------
 
 
 
