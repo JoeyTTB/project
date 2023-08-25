@@ -1,0 +1,49 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include<stdio.h>
+#include<windows.h>
+
+void menu()
+{
+	printf("\n***************欢迎使用倒计时************\n");
+	printf("***************输入数字来选择操作*************\n");
+	printf("****************1.use  2.quit*****************\n");
+}
+
+int main()
+{
+	int a = 0;
+	int i = 0;
+	int j = 0;
+	while (1)
+	{
+		menu();
+		scanf("%d", &j);
+		switch (j)
+		{
+		case 1:printf("请输入倒计时时间（如：10【单位为min】）\n");
+			scanf("%d", &a);
+			a = a * 60000;
+			system("cls");
+			printf("<---倒计时进行中--->\n倒计时为：%d min\n",a/60000);
+			Sleep(a);
+			system("cls");
+			printf("倒计时结束! ! !\n");
+			for (i = 0; i <= 2; i++)
+			{
+				printf("\a");
+				Sleep(2000);
+			}
+			system("cls");
+			break;
+		case 2:
+			break;
+		default:printf("输入错误，重新输入。\n");
+			break;
+		}
+		if (j == 2)
+		{
+			break;
+		}
+	}
+	return 0;
+}
