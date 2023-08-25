@@ -1,0 +1,133 @@
+//学生管理系统：
+
+//将数组中的数值填入到新创建的链表中(尾插法)
+
+//bug:查找表中不存在的学生没有正常返回
+
+typedef struct Node{
+	char name[15];
+	char num[15];
+	Node* next;
+}node;
+
+void CheckList(node* head) {
+	if (head->next != NULL) {
+		node* p = head->next;
+		while (p != NULL) {
+			printf("%s %s\n", p->name, p->num);
+			p = p->next;
+		}
+	}
+	else printf("无可查询的数据！\n");
+}
+
+node* CleStu(node* head,node* P) {
+	if (head->next != NULL) {
+		node* pre = head->next, * p = pre->next;
+		while (pre != NULL) {
+			free(pre);
+			pre = p;
+			if (p != NULL)
+				p = p->next;
+		}
+		head->next = NULL;
+		printf("列表已清空！\n");
+		return head;
+	}
+	else {
+		printf("无法清空！列表已空。\n");
+		return P;
+	}
+}
+
+void FindStu(node* head) {
+	if (head->next != NULL) {
+		node* p = head->next;
+		char str[15] = {};
+		printf("输入欲查找学生的学号:>");
+		if (scanf("%s", str)) {
+			while (strcmp(p->num, str) != 0 && p != NULL) {
+				p = p->next;
+			}
+			if (p != NULL) {
+				printf("查找的数据为:>");
+				printf("%s %s\n", p->name, p->num);
+			}
+			else printf("查无此学号！\n");
+		}
+		else printf("输入错误！\n");
+	}
+	else printf("无法查找空表！\n");
+}
+
+void DelStu(node* head) {
+	if (head->next) {
+		node* q = head, * p = head->next;
+		char str[14] = {};
+		printf("输入欲删除学生的学号:>");
+		if (scanf("%s", str)) {
+			while (strcmp(p->num, str) != 0 && p != NULL) {
+				q = p;
+				p = p->next;
+			}
+			if (p != NULL) {
+				q->next = p->next;
+				free(p);
+				printf("删除成功！\n");
+			}
+			else printf("未查找到相应学号！\n");
+		}
+		else printf("输入错误，重新输入！\n");
+	}
+	else printf("空表无法删除！\n");
+}
+
+node* InsertStu(node* p) {
+	node* pre = p, * q = NULL;
+	printf("输入:学生姓名 学生学号:>\n");
+	q = (node*)malloc(sizeof(node));
+	if (scanf("%s%s", q->name, q->num)) {
+		q->next = NULL;
+		pre->next = q;
+		pre = q;
+		printf("添加成功！\n");
+		return pre;
+	}
+	else {
+		printf("输入失败，请重试！\n");
+		free(q);
+		return pre;
+	}
+}
+
+node* Create() {
+	node* head = (node*)malloc(sizeof(node));
+	head->next = NULL;
+	return head;
+}
+
+int main() {
+	node* h = Create();
+	node* p = h;
+	while (1) {
+		int n = 0;
+		printf("1.添加学生  2.删除学生  3.查找学生  4.退出管理系统  5.清空系统里所有的学生信息 \n");
+		printf("6.查看表里所有的学生数据 >:\n");
+		scanf("%d",&n);
+		system("cls");
+		switch (n) {
+		case 1:p = InsertStu(p);
+			break;
+		case 2:DelStu(h);
+			break;
+		case 3:FindStu(h);
+			break;
+		case 4:return 0;
+		case 5:p = CleStu(h, p);
+			break;
+		case 6:CheckList(h);
+			break;
+		default:printf("输入编号有误！重新输入\n");
+		}
+	}
+}
