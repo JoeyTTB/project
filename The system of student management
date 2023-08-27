@@ -4,6 +4,10 @@
 
 //bug:查找表中不存在的学生没有正常返回
 
+//bud idea:可能是函数strcmp问题,替换为lld,仍然异常退出程序。
+
+//未发现的bug(已修正):删除学生信息后用于尾插新数据的指针指向了被释放的地址，造成InsertNode中pre指向不为最后一个节点的地址，出现隔断，访问表出错。
+
 typedef struct Node{
 	char name[15];
 	char num[15];
@@ -60,7 +64,7 @@ void FindStu(node* head) {
 	else printf("无法查找空表！\n");
 }
 
-void DelStu(node* head) {
+void DelStu(node* head,node* P) {
 	if (head->next) {
 		node* q = head, * p = head->next;
 		char str[14] = {};
@@ -74,12 +78,22 @@ void DelStu(node* head) {
 				q->next = p->next;
 				free(p);
 				printf("删除成功！\n");
+				return q;
 			}
-			else printf("未查找到相应学号！\n");
+			else {
+				printf("未查找到相应学号！\n");
+				return P;
+			}
 		}
-		else printf("输入错误，重新输入！\n");
+		else {
+			printf("输入错误，重新输入！\n");
+			return P;
+		}
 	}
-	else printf("空表无法删除！\n");
+	else {
+		printf("空表无法删除！\n");
+		return P;
+	}
 }
 
 node* InsertStu(node* p) {
@@ -118,7 +132,7 @@ int main() {
 		switch (n) {
 		case 1:p = InsertStu(p);
 			break;
-		case 2:DelStu(h);
+		case 2:p = DelStu(h, p);
 			break;
 		case 3:FindStu(h);
 			break;
