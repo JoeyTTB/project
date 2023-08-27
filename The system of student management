@@ -4,9 +4,15 @@
 
 //bug:查找表中不存在的学生没有正常返回
 
-//bud idea:可能是函数strcmp问题,替换为lld,仍然异常退出程序。
+//bug idea:可能是函数strcmp问题,替换为lld,仍然异常退出程序。
 
-//未发现的bug(已修正):删除学生信息后用于尾插新数据的指针指向了被释放的地址，造成InsertNode中pre指向不为最后一个节点的地址，出现隔断，访问表出错。
+//bug最终的解决方案和原因：调换strcmp和p!=NULL的判断顺序
+//忽略了顺序优先级：第一次while判断可以通过，因为head->next!=NULL确保了p!=NULL,但是当p=p->next时，若p->next为NULL,先执行strcmp,此时调用了空指针,引发了程序异常(解引用空指针)。
+The ignorance of execution sequence.
+Using of NULL ptr in function judgement will cause unusal exit in program.
+
+//未发现的bug(已修正):1.删除学生信息后用于尾插新数据的指针指向了被释放的地址，造成InsertNode中pre指向不为最后一个节点的地址，出现隔断，访问异常。
+wrong use of ptr adding students:cause the disconnection of the linklist.
 
 typedef struct Node{
 	char name[15];
@@ -50,7 +56,7 @@ void FindStu(node* head) {
 		char str[15] = {};
 		printf("输入欲查找学生的学号:>");
 		if (scanf("%s", str)) {
-			while (strcmp(p->num, str) != 0 && p != NULL) {
+			while (p != NULL && strcmp(p->num, str) != 0) {
 				p = p->next;
 			}
 			if (p != NULL) {
@@ -64,13 +70,13 @@ void FindStu(node* head) {
 	else printf("无法查找空表！\n");
 }
 
-void DelStu(node* head,node* P) {
+node* DelStu(node* head,node* P) {
 	if (head->next) {
 		node* q = head, * p = head->next;
 		char str[14] = {};
 		printf("输入欲删除学生的学号:>");
 		if (scanf("%s", str)) {
-			while (strcmp(p->num, str) != 0 && p != NULL) {
+			while (p != NULL && strcmp(p->num, str) != 0) {
 				q = p;
 				p = p->next;
 			}
