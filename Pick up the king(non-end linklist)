@@ -1,0 +1,50 @@
+typedef struct Node{
+	int data;
+	struct Node* next;
+}node;
+
+int main() {
+	int n = 0, m = 0, i = 0, ans[100] = { }, count = 0;//ans存放答案，count表示答案下标,n猴子个数,m数到第几个
+	node* head = NULL, * tail = NULL, * p = NULL, * q = NULL;//q,p用来对链表进行修改
+	head = (node*)malloc(sizeof(node));
+	head->data = -1;
+	head->next = NULL;//对头进行处理
+	while (1) {
+		scanf("%d%d",&n,&m);
+		if (n == 0 || m == 0) {
+			free(head);
+			break;
+		}
+		else {
+			tail = head;
+			for (i = 0; i < n; i++) {
+				p = (node*)malloc(sizeof(node));
+				p->data = i + 1;
+				tail->next = p;
+				p->next = head->next;
+				tail = p;
+			}
+			p = head->next, q = tail, i = 1;//没及时发现的bug:p不指向头，而是第一个元素
+			while (q != p) {//若p==q,则说明循环链表中只有一个节点,一个循环过后指向第一个节点(不是头)
+				if (i == m) {//q总在p前
+					q->next = q->next->next;
+					free(p);
+					p = q->next;
+					i = 1;
+				}
+				else {
+					q = p;
+					p = p->next;
+					i++;
+				}
+			}
+			ans[count++] = p->data;
+			free(p);
+			head->next = NULL;
+		}
+	}
+	for (i = 0; i < count; i++) {
+		printf("%d\n", ans[i]);
+	}
+	return 0;
+}
