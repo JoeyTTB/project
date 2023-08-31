@@ -48,3 +48,45 @@ int main() {
 	}
 	return 0;
 }
+
+//The Second method:用数组实现:>
+
+int main() {
+	int n = 0, m = 0, pos = 0, i = 0, arr[100] = { 0 }, count = 1, ans[100] = { 0 }, num = 0;
+	while (scanf("%d%d", &n, &m)) {
+		if (n == 0 || m == 0)
+			break;
+		else {
+			for (int j = 0; j < n; j++) {
+				arr[j] = j + 1;
+			}
+			num = n;
+		}
+		while (num > 1) {
+			if (arr[pos] != 0) {
+				if (count != m) {
+					pos = (pos + 1) % n;//对下标取模运算，使下标变动的范围锁定在[0,n-1]
+					count++;
+				}
+				else {
+					arr[pos] = 0;
+					pos = (pos + 1) % n;
+					count = 1;
+					while (arr[pos] == 0) {
+						pos = (pos + 1) % n;
+					}
+					num--;//num==1时,arr[pos]可能是空值(0)
+				}
+			}
+			else {
+				pos = (pos + 1) % n;
+			}
+		}
+		ans[i++] = arr[pos];
+		pos = 0;
+	}
+	for (int a = 0; a < i; a++) {
+		printf("%d\n",ans[a]);
+	}
+	return 0;
+}
