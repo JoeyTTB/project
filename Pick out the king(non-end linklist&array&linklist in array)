@@ -91,3 +91,39 @@ int main() {
 	return 0;
 }
 
+//用数组链表的方式：
+
+//可以把下标理解为链表中的指针，下标对应的数值为链表中指针指向的下一个有效节点，其中最后一个节点的数值应是最小下标0(创建时)
+
+int main() {
+	int n = 0, m = 0, i = 0, j = 0, p = 0, q = 0, num = 0, count = 1, ans[100] = { 0 }, arr[100] = { 0 };
+	while (scanf("%d%d", &n, &m)) {
+		if (n == 0 || m == 0)
+			break;
+		else {
+			for (i = 0; i < n - 1; i++) {
+				arr[i] = i + 1;
+			}
+			arr[i] = 0, q = i, p = 0, num = n;
+			while (num > 1) {       //这里有两种写法，也可以是 q ! = p
+				if (count != m) {
+					q = p;
+					p = arr[p];    //下标+1是编号，下标对应的数值类似循环链表写法的前后指针
+					count++;       //将q/p数值赋值对应的数组数值，因为数组中的数值比下标大1，可完成位移的操作
+				}
+				else {
+					arr[q] = arr[p];  //保存p点下一节点的位置
+					arr[p] = -1;      //清楚p指向的节点
+					p = arr[q];       //p指向q指向的下一个有效节点
+					count = 1;
+					num--;
+				}
+			}
+			ans[j++] = q + 1;
+		}
+	}
+	for (i = 0; i < j; i++) {
+		printf("%d\n",ans[i]);
+	}
+	return 0;
+}
