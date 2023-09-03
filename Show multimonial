@@ -1,0 +1,54 @@
+//展示多项式:
+//自己写法的缺点：1.判断语句冗余2.实现的逻辑较复杂，要考虑到所有的情况。
+
+int main() {
+	int x = 0, temp = 0;
+	bool is_negative = false, is_first = true;
+	scanf("%d",&x);
+	while (x >= 0) {
+		scanf("%d",&temp);
+		temp > 0 ? is_negative = false : is_negative = true;
+		if (temp && x != 1) {
+			switch (is_negative) {
+			case 1:if (x == 0) {
+				printf("%d", temp);
+				x--;
+			}
+				  else if (temp == -1 && x != 0) {
+				printf("-x^%d", x--);
+			}
+				  else {
+				printf("%dx^%d", temp, x--);
+			}
+				  is_first = false;
+				  break;
+			case 0:if (temp == 1 && x != 0) {
+				printf("+x^%d", x--);
+			}
+				  else if (x == 0) {
+				printf("+%d", temp);
+				x--;
+			}
+				  else {
+				printf("+%dx^%d", temp, x--);
+			}
+				  is_first = false;
+				  break;
+			default:break;
+			}
+		}
+		else if (x == 1 && temp != 0) {
+			if (temp == 1 || temp == -1) {
+				is_negative ? printf("-x") : printf("+x");
+			}
+			else {
+				is_negative ? printf("%dx", temp) : printf("+%dx", temp);
+			}
+			is_first = false;
+			x--;
+		}
+		else {
+			x--;
+		}
+	}
+}
