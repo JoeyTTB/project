@@ -5,12 +5,24 @@ typedef struct Node {
 }node;
 bool is_first = true, is_negative = false;
 
-void Print(node* p) {
+void Print(node* p) {//同show multinomial
 	while (p != NULL) {
 		p->coefficient > 0 ? is_negative = false : is_negative = true;
-		if (is_first && p->index > 1) {
-			printf("%dX^%d", p->coefficient, p->index);
+		if (is_first && p->coefficient != 0) {
+			if (p->index > 1) {
+				printf("%dX^%d", p->coefficient, p->index);
+			}
+			else if (p->index == 1) {
+				printf("%dX",p->coefficient);
+			}
+			else {
+				printf("%d",p->coefficient);
+			}
 			is_first = false;
+		}
+		else if (p->coefficient == 0) {//coefficient=0不打印
+			p = p->next;
+			continue;
 		}
 		else if (p->index == 0) {
 			is_negative ? printf("%d", p->coefficient) : printf("+%d",p->coefficient);
@@ -25,9 +37,9 @@ void Print(node* p) {
 	}
 }
 
-void Combine2List(node* pa, node* pb) {//crucial part!!!
+void Combine2List(node* pa, node* pb) {
 	node* q = pa,* p=pa->next,* tmp=NULL;
-	while (pb != NULL) {//aim to print linklistA
+	while (pb != NULL) {
 		tmp = pb;
 		if (p->index > pb->index) {
 			if (p->next != NULL) {
