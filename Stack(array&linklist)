@@ -1,0 +1,194 @@
+//数组方式实现(产生垃圾内存,占用内存大,无法调整栈大小,操作简易速度较快):
+const int MAX = 100;
+int Stack[MAX] = {};
+
+bool isFull(int top) {
+	if (top >= MAX)
+		return true;
+	else return false;
+}
+
+bool isEmpty(int top) {
+	if (top == -1)
+		return true;
+	else return false;
+}
+
+void topEle(int top) {
+	printf("The top element is:%d\n",Stack[top]);
+}
+
+void number(int top) {
+	printf("The total elements is:%d\n",top+1);
+}
+
+int cleanStack(int top) {
+	if (!isEmpty(top)) {
+		printf("Clean Successfully!\n");
+		return -1;
+	}
+	else {
+		printf("Clean failed!\n");
+		return top;
+	}
+}
+
+int popStack(int top) {
+	if (!isEmpty(top)) {
+		top--;
+		printf("Pop successfully!\n");
+		return top;
+	}
+	else {
+		printf("Pop failed!\n");
+		return top;
+	}
+}
+
+int pushStack(int top) {
+	if (!isFull(top)) {
+		int tmp = 0;
+		scanf("%d", &tmp);
+		Stack[++top] = tmp;
+		printf("Push Successfully!\n");
+		return top;
+	}
+	else {
+		printf("Push failed!\n");
+		return top;
+	}
+}
+
+int main() {
+	int top = -1, tmp = 0;
+	while (1) {
+		printf("1.压入栈  2.弹出栈  3.清空栈  4.栈总元素  5.栈顶元素  0.退出\n");
+		scanf("%d",&tmp);
+		system("cls");
+		switch (tmp) {
+		case 1:top = pushStack(top);
+			break;
+		case 2:top = popStack(top);
+			break;
+		case 3:top = cleanStack(top);
+			break;
+		case 4:number(top);
+			break;
+		case 5:topEle(top);
+			break;
+		case 0:return 0;
+		}
+	}
+}
+
+
+
+//链表方式实现(可及时处理垃圾内存,可以动态调整栈的大小,操作繁琐耗时较长)：
+
+const int MAX = 9;
+typedef struct Stack {
+	int data;
+	int top;
+	struct Stack* last;
+}s;
+
+void topEle(s* top) {
+	printf("The top element is:%d\n",top->data);
+}
+
+void totalEle(s* top) {
+	printf("The total elements is:%d\n",(top->top)+1);
+}
+
+bool isEmpty(s* top) {
+	if (top->top == -1)
+		return true;
+	else return false;
+}
+
+bool isFull(s* top) {
+	if (top->top == MAX)
+		return true;
+	else return false;
+}
+
+s* cleanStack(s* top) {
+	//写法1:将栈中的元素一个个弹出直至为空(时间复杂度上升)
+	s* tmp = top;
+	if (!isEmpty(tmp)) {
+		while (tmp->top > -1) {
+			top = tmp;
+			tmp = tmp->last;
+			free(top);
+		}
+		printf("clean successfully!\n");
+		return tmp;
+	}
+	else {
+		printf("clean failed!\n");
+		return tmp;
+	}
+	//写法2:直接创建一个新栈(空间复杂度上升)
+	//s* p = initStack(p);
+	//return p;
+}
+
+s* popStack(s* top) {
+	if (!isEmpty(top)) {
+		s* p = top->last;
+		free(top);
+		printf("pop stack successfully!\n");
+		return p;
+	}
+	else {
+		printf("pop stack failed!\n");
+		return top;
+	}
+}
+
+s* pushStack(s* top) {
+	if (!isFull(top)) {
+		int tmp = 0;
+		scanf("%d", &tmp);
+		s* p = (s*)malloc(sizeof(s));
+		p->data = tmp;
+		p->top = top->top + 1;
+		p->last = top;
+		printf("push stack successfully!\n");
+		return p;
+	}
+	else {
+		printf("push stack failed!\n");
+		return top;
+	}
+}
+
+s* initStack(s* top) {
+	top = (s*)malloc(sizeof(s));
+	top->top = -1, top->data = 0, top->last = NULL;
+	return top;
+}
+
+int main() {
+	s* top = NULL;
+	top = initStack(top);
+	while (1) {
+		printf("1.压入栈  2.弹出栈  3.清空栈  4.栈总元素  5.栈顶元素  0.退出\n");
+		int tmp = 0;
+		scanf("%d",&tmp);
+		system("cls");
+		switch (tmp) {
+		case 1:top=pushStack(top);
+			break;
+		case 2:top = popStack(top);
+			break;
+		case 3:top = cleanStack(top);
+			break;
+		case 4:totalEle(top);
+			break;
+		case 5:topEle(top);
+			break;
+		case 0:return 0;
+		}
+	}
+}
