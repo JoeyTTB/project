@@ -1,0 +1,125 @@
+//用链表实现队列：
+
+const int MAX = 10;
+int ttl = 0;
+typedef struct Queue {
+	int data;
+	struct Queue* next;
+}queue;
+
+bool isFull() {
+	if (ttl >= MAX)
+		return true;
+	else return false;
+}
+
+bool isEmpty() {
+	if (ttl == 0)
+		return true;
+	else return false;
+}
+
+void initQueue(queue** q, queue** p) {
+	*q = (queue*)malloc(sizeof(queue));
+	(*q)->next = NULL;
+	(*q)->data = -1;
+	*p = (*q)->next;
+	ttl = 0;
+}
+
+
+void dropQueue(queue** q,queue** p) {
+	queue* tmp = NULL;
+	if (!isEmpty()) {
+		while (*q != NULL) {
+			tmp = *q;
+			*q = (*q)->next;
+			free(tmp);
+		}
+		initQueue(&(*q), &(*p));
+	}
+	else {
+		printf("queue is empty!\n");
+	}
+	//重建一个队列来实现清空的效果：
+	/*
+	tmp = initQueue(tmp,p);
+	return tmp;
+	*/
+}
+
+void totalEle() {
+	printf("The total element is:%d\n",ttl);
+}
+
+void lastEle(queue* p) {
+	if (p != NULL)
+		printf("The data of last is:%d\n", p->data);
+	else printf("No data in the last element!\n");
+}
+
+void firstEle(queue* q) {
+	printf("The data of first is:%d\n", q->data);
+}
+
+void quitQueue(queue** q, queue** p) {
+	queue* tmp = NULL;
+	if (!isEmpty()) {
+		tmp = (*q)->next;
+		free(*q);
+		*q = tmp;
+		ttl--;
+		printf("quit successfully!\n");
+	}
+	else {
+		printf("queue is empty!\n");
+		initQueue(&(*q), &(*p));
+	}
+}
+
+void addQueue(queue** q,queue** p) {
+	if (!isFull()) {
+		queue* ptr = (queue*)malloc(sizeof(queue));
+		scanf("%d",&ptr->data);
+		ptr->next = NULL;
+		if ((*q)->data == -1) {
+			*q = ptr;
+			*p = ptr;
+		}
+		else {
+			(*p)->next = ptr;
+			*p = ptr;
+		}
+		ttl++;
+		printf("add successfully!\n");
+	}
+	else {
+		printf("queue is full!\n");
+	}
+}
+
+int main() {
+	queue* q = NULL, * p = NULL;
+	initQueue(&q, &p);
+	int tmp = 0;
+	while (1) {
+		printf("1.添加队列  2.退出队列  3.队首元素  4.队尾元素  5.总元素个数  6.清空队列  0.退出\n");
+		scanf("%d", &tmp);
+		system("cls");
+		switch (tmp) {
+		case 1:addQueue(&q, &p);
+			break;
+		case 2:quitQueue(&q, &p);
+			break;
+		case 3:firstEle(q);
+			break;
+		case 4:lastEle(p);
+			break;
+		case 5:totalEle();
+			break;
+		case 6:dropQueue(&q, &p);
+			break;
+		case 0:return 0;
+		}
+	}
+}
