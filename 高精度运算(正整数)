@@ -1,0 +1,129 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct bign {
+    int d[1000];
+    int len;
+    bign() {
+        memset(d, 0, sizeof(d));
+        len = 0;
+    }
+};
+
+int comp(bign a, bign b) {
+    if (a.len > b.len) return 1;
+    else if(a.len < b.len) return -1;
+    else {
+        for (int i = a.len - 1; i >= 0; i--) {
+            if (a.d[i] > b.d[i]) return 1;
+            else if (a.d[i] < b.d[i]) return -1;
+        }
+        return 0;
+    }
+}
+
+bign add(bign a, bign b) {
+    bign c;
+    c.len = (a.len >= b.len ? a.len : b.len);
+    int carry = 0;
+    for (int i = 0; i < c.len; i++) {
+        int temp = a.d[i] + b.d[i] + carry;
+        c.d[i] = temp % 10;
+        carry = temp / 10;
+    }
+    if (carry != 0) c.d[c.len++] = carry;
+    return c;
+}
+
+bign minus(bign a, bign b) {
+    bign c;
+    c.len = (a.len >= b.len ? a.len : b.len);
+    int carry = 0;
+    for (int i = 0; i < c.len; i++) {
+        int temp = a.d[i] - b.d[i] - carry;
+        c.d[i] = (temp >= 0 ? temp : temp + 10);
+        carry = (temp >= 0 ? 0 : 1);
+    }
+    if (c.len - 1 > 0 && c.d[c.len - 1] == 0) c.len--;
+    return c;
+}
+
+bign multi(bign a, int b) {//必须确保a的位数最高
+    bign c;
+    int carry = 0;
+    for (int i = 0; i < a.len; i++) {
+        int temp = a.d[i] * b + carry;
+        c.d[c.len++] = temp % 10;
+        carry = temp / 10;
+    }
+    while (carry != 0) {
+        c.d[c.len++] = carry % 10;
+        carry /= 10;
+    }
+    return c;
+}
+
+bign divide(bign a, int b) {//同上
+    bign c;
+    c.len = a.len;
+    int r = 0;
+    for (int i = c.len - 1; i >= 0; i--) {
+        r = r * 10 + a.d[i];
+        if (r < b) c.d[i] = 0;
+        else {
+            c.d[i] = r / b;
+            r %= b;
+        }
+    }
+    while (c.len - 1 > 0 && c.d[c.len - 1] == 0) c.len--;
+    return c;
+}
+
+int Transf(bign t) {
+    int res = 0;
+    for (int i = 0, p = 1; i < t.len; i++, p *= 10) {
+        res += t.d[i] * p;
+    }
+    return res;
+}
+
+void Print(bign t) {
+    for (int i = t.len - 1; i >= 0; i--) printf("%d", t.d[i]);
+    printf("\n");
+}
+
+int main() {
+    char str1[1001] = {};
+    char str2[1001] = {};
+    bign a,b;
+    scanf("%s", str1);
+    scanf("%s", str2);
+    a.len = strlen(str1);
+    b.len = strlen(str2);
+    for (int i = 0; i < a.len; i++) {
+        a.d[i] = str1[a.len - i - 1] - '0';
+    }
+    for (int i = 0; i < b.len; i++) {
+        b.d[i] = str2[b.len - i - 1] - '0';
+    }
+    switch (comp(a, b)) {
+    case -1:printf("a<b\n");
+        break;
+    case 0:printf("a=b\n");
+        break;
+    case 1:printf("a>b\n");
+        break;
+    }
+    bign result;
+    result = add(a, b);
+    Print(result);
+    result = minus(a, b);
+    Print(result);
+    int b_num = Transf(b);
+    result = multi(a, b_num);
+    Print(result);
+    result = divide(a, b_num);
+    Print(result);
+    return 0;
+}
