@@ -1,3 +1,2 @@
 # project
-College Student.....
-Once I Finish a program,I will keep the program in this 'project'.(Included my coding experience)
+
