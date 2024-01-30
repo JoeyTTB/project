@@ -1,0 +1,78 @@
+#include <stdio.h>
+
+long long res[100][100] = { 0 };
+int Prime[1000] = { 0 };//质数表
+bool p[1001] = { 0 };//用于筛选
+
+int NumOfFac(long long n, int p) {//求N的质因子p的个数
+    if (n < p) return 0;
+    else return n / p + NumOfFac(n / p, p);
+}
+
+/*int NumOfFac(int n, int p) {//普通算法
+    int num = 0;
+    while (n % p == 0) {
+        num++;
+        n /= p;
+    }
+    return num;
+}*/
+
+/*long long C(long long n, long long m) {//递归写法
+    if (n == m || m == 0) return 1;
+    if (res[n][m] != 0) return res[n][m];
+    else return res[n][m] = C(n - 1, m) + C(n - 1, m - 1);
+}*/
+
+long long C(long long n, long long m) {//O(m),n=62,m=31时结果溢出
+    long long ans = 1;
+    for (int i = 1; i <= m; i++) {
+        ans = ans * (n - m + i) / i;
+    }
+    return ans;
+}
+
+/*int C(long long n, long long m, int p) {//计算C(n,m)%p,普遍适用,n,m,1e5以内,p,1e9以内
+    if (n == m || m == 0) return 1;
+    if (res[n][m] != 0) return res[n][m];
+    else return res[n][m] = (C(n - 1, m) + C(n - 1, m - 1)) % p;
+}*/
+
+long long binaryPow(int p, int c, int m) {//快速幂
+    long long res = 1;
+    if (!c) return 1;
+    if (c & 1) return p * binaryPow(p, c - 1, m) % m;
+    else {
+        res = binaryPow(p, c / 2, m);
+        return res * res % m;
+    }
+}
+
+void Find_Prime() {
+    int pnum = 0;
+    for (int i = 2; i < 1001; i++) {
+        if (p[i] == false) {
+            Prime[pnum++] = i;
+            for (int j = i + i; j < 1001; j += i) p[j] = true;
+        }
+    }
+}
+
+int C(long long n, long long m, int p) {//利用质因子分解解决C(n,m)%p,n,m,1e6以内,p,1e9以内
+    long long ans = 1;
+    Find_Prime();
+    for (int i = 0; Prime[i] <= n; i++) {
+        int c = NumOfFac(n, Prime[i]) - NumOfFac(m, Prime[i]) - NumOfFac(n - m, Prime[i]);
+        ans = ans * binaryPow(Prime[i], c, p);
+    }
+    return ans % p;
+}
+
+int main() {
+    long long n = 10;
+    long long m = 2;
+    int p = 5;
+    printf("C(n,m) = %lld\n", C(n, m));
+    printf("C(n,m)/p······%d\n", C(n, m, p));
+    return 0;
+}
